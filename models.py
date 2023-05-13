@@ -34,7 +34,7 @@ class Product:
             self.quantity = self.quantity - quantity
         else:
             raise ValueError(
-                f"Requested quantity of the product is not available. In stock: {self.quantity}"
+                f'Requested quantity of product "{self.name}" is not available. In stock: {self.quantity}. To buy reduce the quantity by {quantity - self.quantity} units'
             )
 
     def __hash__(self):
@@ -92,12 +92,6 @@ class Cart:
         Учтите, что товаров может не хватать на складе.
         В этом случае нужно выбросить исключение ValueError
         """
-        cart_copy = self.products.copy()
-        for i in cart_copy.keys():
-            try:
-                i.buy(self.products[i])
-                self.remove_product(i)
-            except ValueError:
-                raise ValueError(
-                    f'Requested quantity of product "{i.name}" is not available. In stock: {i.quantity}. To buy reduce the quantity by {self.products[i] - i.quantity} units'
-                )
+        for product, quantity in self.products.items():
+            product.buy(quantity)
+        self.clear()

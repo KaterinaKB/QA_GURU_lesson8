@@ -51,7 +51,7 @@ class TestProducts:
         #  которые ожидают ошибку ValueError при попытке купить больше, чем есть в наличии
         with pytest.raises(
             ValueError,
-            match=f"Requested quantity of the product is not available. In stock: 1000",
+            match=f'Requested quantity of product "book" is not available. In stock: 1000. To buy reduce the quantity by 5 units',
         ):
             product_book.buy(1005)
 
@@ -97,6 +97,13 @@ class TestCart:
         self, cart_with_product, product_book
     ):
         cart_with_product.remove_product(product_book, 100)
+
+        assert product_book not in cart_with_product.products
+
+    def test_cart_remove_product_same_count_as_in_cart(
+        self, cart_with_product, product_book
+    ):
+        cart_with_product.remove_product(product_book, 10)
 
         assert product_book not in cart_with_product.products
 
